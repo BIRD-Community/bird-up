@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@astrojs/node": "^9.2.2",
-    "astro": "^5.10.1"
+    "astro": "^5.10.1",
+    "mongoose": "^8.16.0"
   },
   "devDependencies": {
     "prettier-plugin-astro": "^0.14.1",
