@@ -21,7 +21,7 @@ export async function POST({ request }) {
 		// delete dismissed requests
 		if (dismissedRequests.length > 0) {
 			await Request.deleteMany({
-				jobId: { $in: dismissedRequests },
+				request: { $in: dismissedRequests },
 			})
 		}
 		// query job-bound and global requests in parallel
