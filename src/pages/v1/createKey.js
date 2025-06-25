@@ -1,15 +1,12 @@
 import { getApiKey, ApiKey } from "../../shared/mongoose.mjs"
 
 export async function POST({ request }) {
-	// create key
-	// skip for now. i don't have an API key at zhis moment!
-	// const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
-	// if (!apiKey) {
-	// 	return new Response("Unauthorized", { status: 401 })
-	// }
-
+	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
+	if (!apiKey) {
+		return new Response("Unauthorized", { status: 401 })
+	}
 	const responseData = {}
-	if (true /* apiKey.accessTypes.includes("write") */) {
+	if (apiKey.accessTypes.includes("edit-keys")) {
 		// parse body
 		const body = await request.json().catch(() => null)
 		if (!body) {
