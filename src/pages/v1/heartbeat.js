@@ -1,4 +1,4 @@
-import { getApiKey, Request } from "../../shared/mongoose.mjs"
+import { getApiKey, Request, TrackedServer } from "../../shared/mongoose.mjs"
 
 export async function POST({ request }) {
 	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
@@ -47,6 +47,12 @@ export async function POST({ request }) {
 			createdAt: request.createdAt,
 		})
 		responseData.requests = [].concat(requests.map(stripRequest), globalRequests.map(stripRequest))
+		// upsert tracked server
+		const serverData = {
+			jobId: jobId,
+			lastHeartbeat: new Date(),
+		}
+		await TrackedServer.updateOne({ jobId: jobId }, serverData, { upsert: true })
 	} else {
 		return new Response("Forbidden", { status: 403 })
 	}
