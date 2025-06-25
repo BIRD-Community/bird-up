@@ -47,11 +47,14 @@ export async function POST({ request }) {
 			createdAt: request.createdAt,
 		})
 		responseData.requests = [].concat(requests.map(stripRequest), globalRequests.map(stripRequest))
-		// upsert tracked server
+		delete body.jobId
 		const serverData = {
 			jobId: jobId,
 			lastHeartbeat: new Date(),
+			data: body || {},
 		}
+		if (request.headers.get("Roblox-Id")) serverData.data.placeId = request.headers.get("Roblox-Id")
+		// upsert tracked server
 		await TrackedServer.updateOne({ jobId: jobId }, serverData, { upsert: true })
 	} else {
 		return new Response("Forbidden", { status: 403 })

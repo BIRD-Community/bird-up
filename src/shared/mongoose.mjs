@@ -102,6 +102,10 @@ const trackedServerSchema = new Schema({
 		type: Date,
 		default: Date.now,
 	},
+	data: {
+		type: Object,
+		default: {},
+	},
 })
 
 export const TrackedServer = mongoose.model("TrackedServer", trackedServerSchema)
