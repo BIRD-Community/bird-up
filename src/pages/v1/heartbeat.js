@@ -45,6 +45,7 @@ export async function POST({ request }) {
 		const stripRequest = (request) => ({
 			request: request.request,
 			createdAt: request.createdAt,
+			data: request.data,
 		})
 		responseData.requests = [].concat(requests.map(stripRequest), globalRequests.map(stripRequest))
 		delete body.jobId

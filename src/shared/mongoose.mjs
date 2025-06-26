@@ -13,6 +13,9 @@ const requestSchema = new Schema({
 		required: true,
 		index: true,
 	},
+	data: {
+		type: Object,
+	},
 	jobId: {
 		type: String,
 	},
