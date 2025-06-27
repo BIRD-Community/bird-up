@@ -28,7 +28,9 @@ export async function POST({ request }) {
 			datastoreName,
 		},
 		jobId: server.jobId,
-		type: "job-bound", // TODO: should be a persistent request
+		type: "persistent",
+		scope: "roblox",
+		persistentLastChecked: new Date(),
 	})
 	await requestDocument.save().catch(() => {
 		return new Response("Error creating request", { status: 500 })

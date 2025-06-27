@@ -1,4 +1,4 @@
-import { getApiKey, Request, TrackedServer } from "../../shared/mongoose.mjs"
+import { getApiKey, Request, TrackedServer, reassignDeadPersistentRequests } from "../../shared/mongoose.mjs"
 
 export async function POST({ request }) {
 	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
@@ -24,8 +24,9 @@ export async function POST({ request }) {
 				request: { $in: dismissedRequests },
 			})
 		}
+		await reassignDeadPersistentRequests()
 		// query job-bound and global requests in parallel
-		const [requests, globalRequests] = await Promise.all([
+		const [requests, globalRequests, persistentRequests] = await Promise.all([
 			Request.find({
 				jobId: jobId,
 				type: "job-bound",
@@ -41,13 +42,18 @@ export async function POST({ request }) {
 				.sort({ createdAt: -1 })
 				.limit(100)
 				.exec(),
+			Request.find({
+				jobId: jobId,
+				type: "persistent",
+				scope: "roblox",
+			}),
 		])
 		const stripRequest = (request) => ({
 			request: request.request,
 			createdAt: request.createdAt,
 			data: request.data,
 		})
-		responseData.requests = [].concat(requests.map(stripRequest), globalRequests.map(stripRequest))
+		responseData.requests = [].concat(requests.map(stripRequest), globalRequests.map(stripRequest), persistentRequests.map(stripRequest))
 		delete body.jobId
 		const serverData = {
 			jobId: jobId,

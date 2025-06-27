@@ -30,6 +30,9 @@ const requestSchema = new Schema({
 		enum: ["roblox"],
 		default: "roblox",
 	},
+	persistentLastChecked: {
+		type: Date,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
@@ -112,3 +115,28 @@ const trackedServerSchema = new Schema({
 })
 
 export const TrackedServer = mongoose.model("TrackedServer", trackedServerSchema)
+
+export async function reassignDeadPersistentRequests() {
+	// find persistent requests of servers which stopped responding
+	const requests = await Request.find({
+		type: "persistent",
+		jobId: { $exists: true },
+		persistentLastChecked: { $lt: new Date(Date.now() - 1000 * 20) }, // 20 seconsa
+	})
+
+	await Promise.all(
+		requests.map(async (request) => {
+			// find a random tracked server
+			const trackedServer = await TrackedServer.aggregate([{ $match: { lastHeartbeat: { $gt: new Date(Date.now() - 1000 * 11) } } }, { $sample: { size: 1 } }]).catch(() => null)
+			if (!trackedServer || trackedServer.length === 0) {
+				request.persistentLastChecked = new Date()
+				return request.save().catch(() => {})
+			}
+
+			const server = trackedServer[0]
+			request.jobId = server.jobId
+			request.persistentLastChecked = new Date()
+			await request.save().catch(() => {})
+		})
+	)
+}
