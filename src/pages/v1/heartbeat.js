@@ -46,7 +46,10 @@ export async function POST({ request }) {
 				jobId: jobId,
 				type: "persistent",
 				scope: "roblox",
-			}),
+			})
+				.sort({ createdAt: -1 })
+				.limit(100)
+				.exec(),
 		])
 		const stripRequest = (request) => ({
 			request: request.request,
