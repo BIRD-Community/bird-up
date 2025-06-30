@@ -10,13 +10,9 @@ export async function POST({ request }) {
 	if (apiKey.accessTypes.includes("write")) {
 		// parse body
 		const body = await request.json().catch(() => null)
-		if (!body) {
-			return new Response("Invalid request body", { status: 400 })
-		}
+		if (!body) return new Response("Invalid request body", { status: 400 })
 		const jobId = body.jobId
-		if (!jobId) {
-			return new Response("Job ID is required", { status: 400 })
-		}
+		if (!jobId) return new Response("Job ID is required", { status: 400 })
 		const dismissedRequests = body.dismissedRequests || []
 		// delete dismissed requests
 		if (dismissedRequests.length > 0) {
