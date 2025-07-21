@@ -33,7 +33,7 @@ export async function POST({ request }) {
 						},
 					})
 				})
-				.catch(() => new Response("Error fetching data", { status: 500 }))
+				.catch(() => new Response("Error finding data", { status: 500 }))
 		case "insert":
 			const insertData = body.data
 			if (!insertData) return new Response("Data field is required", { status: 400 })
