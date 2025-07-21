@@ -72,6 +72,10 @@ const apiKeySchema = new Schema({
 		enum: ["read", "write", "edit-keys", "roblox"],
 		default: [],
 	},
+	metadataCollection: {
+		type: String,
+		default: "metadata"
+	},
 	description: {
 		type: String,
 		default: "",
