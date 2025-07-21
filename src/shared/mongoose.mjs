@@ -121,7 +121,7 @@ export async function reassignDeadPersistentRequests() {
 	const requests = await Request.find({
 		type: "persistent",
 		jobId: { $exists: true },
-		persistentLastChecked: { $lt: new Date(Date.now() - 1000 * 20) }, // 20 seconsa
+		persistentLastChecked: { $lt: new Date(Date.now() - 1000 * 20) }, // 20 seconds
 	})
 
 	await Promise.all(
