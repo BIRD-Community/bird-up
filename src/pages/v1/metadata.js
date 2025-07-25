@@ -1,5 +1,7 @@
 import { db } from "../../shared/db.mjs"
 import { getApiKey } from "../../shared/mongoose.mjs"
+import { BSON } from "mongodb"
+const { EJSON } = BSON
 
 export async function POST({ request }) {
 	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
@@ -24,7 +26,7 @@ export async function POST({ request }) {
 				.limit(limit)
 				.toArray()
 				.then((data) => {
-					output.data = data
+					output.data = data.map((item) => EJSON.serialize(item))
 					return new Response(JSON.stringify(output), {
 						status: 200,
 						headers: {
@@ -38,7 +40,7 @@ export async function POST({ request }) {
 			const insertData = body.data
 			if (!insertData) return new Response("Data field is required", { status: 400 })
 			return collection
-				.insertOne(insertData)
+				.insertOne(EJSON.deserialize(insertData))
 				.then((result) => {
 					output.insertedId = result.insertedId
 					return new Response(JSON.stringify(output), {
