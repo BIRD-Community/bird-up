@@ -48,7 +48,7 @@ const pendingDatastoreWriteSchema = new Schema({
 		index: true,
 	},
 	data: {
-		type: String,
+		type: Schema.Types.Mixed,
 		required: true,
 	},
 	createdAt: {
