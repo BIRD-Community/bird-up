@@ -53,11 +53,11 @@ export async function POST({ request }) {
 				})
 				.catch(() => new Response("Error inserting data", { status: 500 }))
 		case "update":
-			const updateQuery = body.query
-			const updateData = body.data
-			if (!updateQuery || !updateData) return new Response("Query and data fields are required", { status: 400 })
+			if (!body.query || !body.data) return new Response("Query and data fields are required", { status: 400 })
+			const updateQuery = EJSON.deserialize(body.query)
+			const updateDocument = EJSON.deserialize(body.data)
 			return collection
-				.updateMany(updateQuery, { $set: updateData })
+				.updateMany(updateQuery, updateDocument)
 				.then((result) => {
 					output.modifiedCount = result.modifiedCount
 					return new Response(JSON.stringify(output), {
