@@ -20,8 +20,9 @@ export async function POST({ request }) {
 			const projection = body.projection
 			const limit = body.limit ?? 100
 			const skip = body.skip ?? 0
+			const sort = body.sort ?? { _id: -1 }
 			return collection
-				.find(query, { projection })
+				.find(query, { projection, sort })
 				.skip(skip)
 				.limit(limit)
 				.toArray()
