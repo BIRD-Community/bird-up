@@ -16,11 +16,11 @@ export async function POST({ request }) {
 
 	switch (type) {
 		case "find":
-			const query = body.query ?? {}
-			const projection = body.projection
+			const query = EJSON.deserialize(body.query ?? {})
+			const projection = EJSON.deserialize(body.projection ?? {})
 			const limit = body.limit ?? 100
 			const skip = body.skip ?? 0
-			const sort = body.sort ?? { _id: -1 }
+			const sort = EJSON.deserialize(body.sort ?? { _id: -1 })
 			return collection
 				.find(query, { projection, sort })
 				.skip(skip)
