@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@astrojs/node": "^9.2.2",
-    "astro": "^5.10.1",
+    "astro": "^5.12.8",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.0"
   },
