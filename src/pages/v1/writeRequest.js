@@ -58,7 +58,7 @@ export async function GET({ request }) {
 	return new Response(data, {
 		status: 200,
 		headers: {
-			"Content-Type": "text/plain",
+			"Content-Type": "application/json",
 			"Cache-Control": "no-cache",
 		},
 	})
