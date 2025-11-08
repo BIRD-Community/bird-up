@@ -59,6 +59,30 @@ const pendingDatastoreWriteSchema = new Schema({
 
 export const PendingDatastoreWrite = mongoose.model("PendingDatastoreWrite", pendingDatastoreWriteSchema)
 
+const pasteSchema = new Schema({
+	key: {
+		type: String,
+		index: true,
+		unique: true,
+		default: () => randomBytes(48).toString("base64url"),
+	},
+	data: {
+		type: String,
+		required: true,
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now,
+	},
+	expiresAt: {
+		type: Date,
+		// seven days
+		default: () => new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+	},
+})
+
+export const Paste = mongoose.model("Paste", pasteSchema)
+
 const apiKeySchema = new Schema({
 	key: {
 		type: String,
@@ -74,7 +98,7 @@ const apiKeySchema = new Schema({
 	},
 	metadataCollection: {
 		type: String,
-		default: "metadata"
+		default: "metadata",
 	},
 	description: {
 		type: String,
