@@ -55,7 +55,7 @@ export async function GET({ request }) {
 	return new Response(data, {
 		status: 200,
 		headers: {
-			"Content-Type": "text/plain",
+			"Content-Type": "text/plain; charset=utf-8",
 			"Cache-Control": "no-cache",
 			"Last-Modified": paste.createdAt.toUTCString(),
 			"Expires": paste.expiresAt.toUTCString(),
