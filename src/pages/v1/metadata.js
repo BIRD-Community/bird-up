@@ -4,7 +4,7 @@ import { BSON } from "mongodb"
 const { EJSON } = BSON
 
 export async function POST({ request }) {
-	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
+	const apiKey = await getApiKey(request).catch(() => null)
 	if (!apiKey) return new Response("Unauthorized", { status: 401 })
 	if (!apiKey.accessTypes.includes("write")) return new Response("Forbidden", { status: 403 })
 	const output = {}

@@ -2,7 +2,7 @@
 import { Paste, getApiKey } from "../../shared/mongoose.mjs"
 
 export async function POST({ request }) {
-	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
+	const apiKey = await getApiKey(request).catch((error) => null)
 	if (!apiKey) return new Response("Unauthorized", { status: 401 })
 	if (!apiKey.accessTypes.includes("write")) return new Response("Forbidden", { status: 403 })
 

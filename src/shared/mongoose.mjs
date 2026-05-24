@@ -112,12 +112,16 @@ const apiKeySchema = new Schema({
 
 export const ApiKey = mongoose.model("ApiKey", apiKeySchema)
 
-export function getApiKey(key) {
-	if (typeof key !== "string" || key.length === 0) {
-		throw new Error("Invalid API key")
+export async function getApiKey(request) {
+	const authorizationKey = request.headers.get("Authorization")
+	if (typeof authorizationKey === "string" || authorizationKey.length !== 0) {
+			return ApiKey.findOne({ key }).exec()
 	}
-
-	return ApiKey.findOne({ key }).exec()
+	const body = await request.json().catch(() => null)
+	if (body && body._authorization && typeof body._authorization === "string" && body._authorization.length !== 0) {
+		return ApiKey.findOne({ key: body._authorization }).exec()
+	}
+	return new Error("Invalid API key.")
 }
 
 const trackedServerSchema = new Schema({
