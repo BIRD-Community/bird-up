@@ -1,7 +1,7 @@
 import { getApiKey, Request, TrackedServer, reassignDeadPersistentRequests } from "../../shared/mongoose.mjs"
 
 export async function POST({ request }) {
-	const apiKey = await getApiKey(request).catch(() => null)
+	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
 	if (!apiKey) {
 		return new Response("Unauthorized", { status: 401 })
 	}

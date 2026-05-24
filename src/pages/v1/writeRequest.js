@@ -1,7 +1,7 @@
 import { PendingDatastoreWrite, Request, TrackedServer, getApiKey } from "../../shared/mongoose.mjs"
 
 export async function POST({ request }) {
-	const apiKey = await getApiKey(request).catch(() => null)
+	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
 	if (!apiKey) return new Response("Unauthorized", { status: 401 })
 	if (!apiKey.accessTypes.includes("write")) return new Response("Forbidden", { status: 403 })
 	const output = {}
@@ -45,7 +45,7 @@ export async function POST({ request }) {
 }
 
 export async function GET({ request }) {
-	const apiKey = await getApiKey(request).catch(() => null)
+	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
 	if (!apiKey) return new Response("Unauthorized", { status: 401 })
 	if (!apiKey.accessTypes.includes("read")) return new Response("Forbidden", { status: 403 })
 	const queryParams = Object.fromEntries(new URL(request.url).searchParams.entries())
@@ -65,7 +65,7 @@ export async function GET({ request }) {
 }
 
 export async function DELETE({ request }) {
-	const apiKey = await getApiKey(request).catch(() => null)
+	const apiKey = await getApiKey(request.headers.get("Authorization")).catch(() => null)
 	if (!apiKey) return new Response("Unauthorized", { status: 401 })
 	if (!apiKey.accessTypes.includes("write")) return new Response("Forbidden", { status: 403 })
 	const body = await request.json().catch(() => null)
