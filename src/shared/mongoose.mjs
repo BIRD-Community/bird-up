@@ -114,7 +114,7 @@ export const ApiKey = mongoose.model("ApiKey", apiKeySchema)
 
 export async function getApiKey(request) {
 	const authorizationKey = request.headers.get("Authorization")
-	if (typeof authorizationKey === "string" || authorizationKey.length !== 0) {
+	if (typeof authorizationKey === "string" && authorizationKey.length !== 0) {
 			return ApiKey.findOne({ key }).exec()
 	}
 	const body = await request.json().catch(() => null)
